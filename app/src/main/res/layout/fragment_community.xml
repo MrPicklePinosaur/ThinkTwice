@@ -7,4 +7,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Community" />
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="See friends"
+        android:layout_centerInParent="true"
+        android:textColor="#11e2ed"
+        android:textSize="40px"
+        android:textStyle="bold|italic"
+        android:background="#ffac05"
+        android:drawableBottom="@drawable/ic_explore_black_24dp"
+        />
 </RelativeLayout>

@@ -8,13 +8,32 @@
         android:layout_height="wrap_content"
         android:text="@string/title_home" />
 
-    <Button
-        style="?android:attr/borderlessButtonStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:drawableStart="@drawable/ic_explore_black_24dp"
-        android:fontFamily="monospace"
-        android:text="Profile" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="177dp"
+                android:layout_height="match_parent"
+                android:drawableStart="@drawable/ic_explore_black_24dp"
+                android:fontFamily="monospace"
+                android:text="Profile" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20px"
+                android:text="lmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmaolmao"
+                android:textSize="150px" />
+        </LinearLayout>
+
+    </ScrollView>
 
 </RelativeLayout>

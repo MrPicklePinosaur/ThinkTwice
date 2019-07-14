@@ -25,14 +25,19 @@ class FragmentHome extends Fragment {
 
 class FragmentCamera extends Fragment implements View.OnClickListener {
 
-    ImageView img;
+    ImageView snapshot;
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceStats) {
 
         View view = inflater.inflate(R.layout.fragment_camera,null);
+
+        //Buttons
         Button take_photo_button = view.findViewById(R.id.take_photo_button);
         take_photo_button.setOnClickListener(this);
+
+        //images
+        snapshot = view.findViewById(R.id.snapshot); //shows a snapshot of the image that was just taken
 
         return view;
     }
@@ -43,7 +48,6 @@ class FragmentCamera extends Fragment implements View.OnClickListener {
             case R.id.take_photo_button:
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(intent,0);
-                System.out.println("CLICKED");
                 break;
         }
     }
@@ -52,6 +56,7 @@ class FragmentCamera extends Fragment implements View.OnClickListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+        snapshot.setImageBitmap(bitmap);
         System.out.println("activityresult");
     }
 }

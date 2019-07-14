@@ -2,11 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Camera" />
+    
+    <ImageView
+        android:id="@+id/snapshot"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="30dp"
+        android:layout_above="@id/take_photo_button"
+        android:layout_centerInParent="true" />
 
     <Button
         android:id="@+id/take_photo_button"
@@ -14,6 +17,7 @@
         android:layout_height="wrap_content"
         android:text="Take Photo!"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"/>
 
 </RelativeLayout>

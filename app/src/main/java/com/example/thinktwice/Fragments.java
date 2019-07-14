@@ -1,9 +1,15 @@
 package com.example.thinktwice;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.service.media.MediaBrowserService;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,11 +23,36 @@ class FragmentHome extends Fragment {
     }
 }
 
-class FragmentCamera extends Fragment {
+class FragmentCamera extends Fragment implements View.OnClickListener {
+
+    ImageView img;
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceStats) {
-        return inflater.inflate(R.layout.fragment_camera,null);
+
+        View view = inflater.inflate(R.layout.fragment_camera,null);
+        Button take_photo_button = view.findViewById(R.id.take_photo_button);
+        take_photo_button.setOnClickListener(this);
+
+        return view;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.take_photo_button:
+                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(intent,0);
+                System.out.println("CLICKED");
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+        System.out.println("activityresult");
     }
 }
 

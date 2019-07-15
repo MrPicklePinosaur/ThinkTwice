@@ -58,6 +58,8 @@ class FragmentCamera extends Fragment implements View.OnClickListener {
         Bitmap bitmap = (Bitmap) data.getExtras().get("data");
         snapshot.setImageBitmap(bitmap);
         System.out.println("activityresult");
+
+        Detection.labelGuesser(bitmap);
     }
 }
 

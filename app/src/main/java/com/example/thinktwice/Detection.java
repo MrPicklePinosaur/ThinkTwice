@@ -24,6 +24,7 @@ public class Detection {
         ByteString img_bytes = Detection.bitmapToByteSting(bmp);
         Image img = Image.newBuilder().setContent(img_bytes).build();
 
+        /*
         //setup request
         Feature feature = Feature.newBuilder().setType(Feature.Type.WEB_DETECTION).build();
         AnnotateImageRequest request = AnnotateImageRequest.newBuilder().addFeatures(feature).setImage(img).build();
@@ -33,7 +34,7 @@ public class Detection {
             ImageAnnotatorClient client = ImageAnnotatorClient.create();
             List<AnnotateImageResponse> response = client.batchAnnotateImages(requests).getResponsesList();
         } catch(IOException ex) { System.out.println("Eroor initing ImgAnnotateClient: "+ex); }
-
+        */
     }
 
     //Take pictures taken by android camera and converts them to images taht are compatable with google images
@@ -42,7 +43,7 @@ public class Detection {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG,100,stream);
         byte[] bytes = stream.toByteArray();
-        bmp.recycle();
+
         return ByteString.copyFrom(bytes);
     }
 }

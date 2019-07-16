@@ -69,11 +69,26 @@ class FragmentCamera extends Fragment implements View.OnClickListener {
     }
 }
 
-class FragmentCommunity extends Fragment {
+class FragmentCommunity extends Fragment implements View.OnClickListener {
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceStats) {
-        return inflater.inflate(R.layout.fragment_community,null);
+        View view = inflater.inflate(R.layout.fragment_community,null);
+
+        //Buttons
+        Button send_http_button = view.findViewById(R.id.send_http_button);
+        send_http_button.setOnClickListener(this);
+
+        return view;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.send_http_button:
+                WebScraper.sendRequest("hello world");
+                break;
+        }
     }
 }
 

@@ -13,5 +13,13 @@
         android:textStyle="bold|italic"
         android:background="#ffac05"
         android:drawableBottom="@drawable/ic_explore_black_24dp"
-        />
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/send_http_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Send HTTP request"
+        android:layout_centerInParent="true" />
+
 </RelativeLayout>

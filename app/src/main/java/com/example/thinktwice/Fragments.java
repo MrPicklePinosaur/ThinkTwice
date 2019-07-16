@@ -77,10 +77,25 @@ class FragmentCommunity extends Fragment {
     }
 }
 
-class FragmentExplore extends Fragment {
+class FragmentExplore extends Fragment implements View.OnClickListener {
 
     @Nullable @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceStats) {
-        return inflater.inflate(R.layout.fragment_explore,null);
+        View view = inflater.inflate(R.layout.fragment_explore,null);
+
+        //Buttons
+        Button web_scrape_button = view.findViewById(R.id.web_scrape_button);
+        web_scrape_button.setOnClickListener(this);
+
+        return view;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.web_scrape_button:
+                WebScraper.getLinks("https://en.wikipedia.org/wiki/List_of_programming_languages");
+                break;
+        }
     }
 }

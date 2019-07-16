@@ -4,9 +4,10 @@
     android:layout_height="match_parent">
 
     <Button
+        android:id="@+id/web_scrape_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="See more"
+        android:text="Web Scrape!"
         android:layout_centerInParent="true"
         android:background="@drawable/gradient" />
 

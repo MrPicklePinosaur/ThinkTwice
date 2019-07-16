@@ -25,12 +25,18 @@ public class Detection {
         ByteString img_bytes = Detection.bitmapToByteSting(bmp);
         Image img = Image.newBuilder().setContent(img_bytes).build();
 
-
         //setup request
         Feature feature = Feature.newBuilder().setType(Feature.Type.WEB_DETECTION).build();
         AnnotateImageRequest request = AnnotateImageRequest.newBuilder().addFeatures(feature).setImage(img).build();
         requests.add(request);
 
+        /*
+        try {
+            ImageAnnotatorClient client = ImageAnnotatorClient.create();
+        } catch(IOException ex) { System.out.println("ERROR IN API INIT: "+ex); }
+        */
+
+        /*
         try {
             ImageAnnotatorClient client = ImageAnnotatorClient.create();
             List<AnnotateImageResponse> response = client.batchAnnotateImages(requests).getResponsesList();
@@ -39,6 +45,7 @@ public class Detection {
                 if (resp.hasError()) {
                     System.out.println("Error in response: "+resp.getError().getMessage()); return;
                 }
+
                 WebDetection annotation = resp.getWebDetection();
 
                 for (WebDetection.WebLabel label : annotation.getBestGuessLabelsList()) {
@@ -48,6 +55,7 @@ public class Detection {
 
 
         } catch(IOException ex) { System.out.println("Error initing ImgAnnotateClient: "+ex); }
+        */
 
     }
 

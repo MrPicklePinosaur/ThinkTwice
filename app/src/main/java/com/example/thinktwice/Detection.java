@@ -8,6 +8,7 @@ import com.google.cloud.vision.v1.AnnotateImageResponse;
 import com.google.cloud.vision.v1.Feature;
 import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
+import com.google.cloud.vision.v1.WebDetection;
 import com.google.protobuf.ByteString;
 
 import java.io.ByteArrayOutputStream;
@@ -24,7 +25,7 @@ public class Detection {
         ByteString img_bytes = Detection.bitmapToByteSting(bmp);
         Image img = Image.newBuilder().setContent(img_bytes).build();
 
-        /*
+
         //setup request
         Feature feature = Feature.newBuilder().setType(Feature.Type.WEB_DETECTION).build();
         AnnotateImageRequest request = AnnotateImageRequest.newBuilder().addFeatures(feature).setImage(img).build();
@@ -33,8 +34,21 @@ public class Detection {
         try {
             ImageAnnotatorClient client = ImageAnnotatorClient.create();
             List<AnnotateImageResponse> response = client.batchAnnotateImages(requests).getResponsesList();
-        } catch(IOException ex) { System.out.println("Eroor initing ImgAnnotateClient: "+ex); }
-        */
+
+            for (AnnotateImageResponse resp : response) {
+                if (resp.hasError()) {
+                    System.out.println("Error in response: "+resp.getError().getMessage()); return;
+                }
+                WebDetection annotation = resp.getWebDetection();
+
+                for (WebDetection.WebLabel label : annotation.getBestGuessLabelsList()) {
+                    System.out.println("Retrieved: "+label.getLabel());
+                }
+            }
+
+
+        } catch(IOException ex) { System.out.println("Error initing ImgAnnotateClient: "+ex); }
+
     }
 
     //Take pictures taken by android camera and converts them to images taht are compatable with google images

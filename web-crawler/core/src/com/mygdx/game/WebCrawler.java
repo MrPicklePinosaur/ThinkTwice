@@ -17,27 +17,35 @@ import java.util.Queue;
 public class WebCrawler {
 
     public static final String SEARCH_ENGINE = "https://www.google.ca/search?";
-    public static final String SEARCH_CHARSET =  "UTF-8";
+    public static final String SEARCH_CHARSET = "UTF-8";
+    public static final String SEARCH_PARAMS = "&num=100";
 
     private HashSet<String> visited = new HashSet<String>();
     private LinkedList<String> toVisit = new LinkedList<String>();
 
-    public WebCrawler(String root) {
+    public WebCrawler() {
 
     }
 
-    public void generateQuery(String search) {
+    public String generateQuery(String search) {
+        String query = null;
         try {
-            String query = SEARCH_ENGINE+URLEncoder.encode(search, SEARCH_CHARSET);
-            System.out.println(query);
+            query = SEARCH_ENGINE+"q="+URLEncoder.encode(search, SEARCH_CHARSET)+SEARCH_PARAMS;
         } catch(UnsupportedEncodingException ex) { System.out.println("Error when generating query: "+ex); }
+
+        assert (query != null && !query.equals(null)): "Error when generating query";
+        return query;
     }
 
-    public void start_crawl(String root) {
+    public void start_crawl(String search) {
         this.visited.clear();
         this.toVisit.clear();
 
-        toVisit.add(root);
+        //generate google search url
+        String rootUrl = this.generateQuery(search);
+        toVisit.add(rootUrl);
+        System.out.println(rootUrl);
+
         while (toVisit.size() > 0) {
 
             String curUrl = toVisit.get(0);
@@ -47,14 +55,26 @@ public class WebCrawler {
             try {
                 Document doc = Jsoup.connect(curUrl).get(); //retrieve html from website
 
-                Elements links = doc.getElementsByTag("a");
-
+                this.pull_links(doc);
+                /*
                 for (Element link : links) {
 
                 }
+                */
 
 
             } catch (IOException ex) { System.out.println("Error when connecting to website: "+ex); }
+
+            toVisit.remove(0); //Possibly reconsider using linkedlist, as remove is O(n)
+        }
+    }
+
+    public void pull_links(Document doc) {
+        Elements links = doc.getElementsByClass("r");
+
+        for (Element link : links) {
+            System.out.println(link.select("a").attr("href"));
+            //System.out.println(link.attr("href"));
         }
     }
 

@@ -12,8 +12,8 @@ public class CrawlerMain extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
-		WebCrawler wc = new WebCrawler("https://en.wikipedia.org/wiki/List_of_programming_languages");
-		wc.generateQuery("hello world");
+		WebCrawler wc = new WebCrawler();
+		wc.start_crawl("hello world");
 	}
 
 	@Override

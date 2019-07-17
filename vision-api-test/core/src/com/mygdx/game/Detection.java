@@ -15,10 +15,9 @@ import java.util.List;
 
 public class Detection {
 
-    public static void labelGuesser(Image img) {
+    public static String labelGuesser(Image img) {
         ArrayList<AnnotateImageRequest> requests = new ArrayList<AnnotateImageRequest>();
-
-
+        String result = null;
 
         //setup request
         Feature feature = Feature.newBuilder().setType(Feature.Type.WEB_DETECTION).build();
@@ -30,42 +29,23 @@ public class Detection {
             List<AnnotateImageResponse> response = client.batchAnnotateImages(requests).getResponsesList();
 
             for (AnnotateImageResponse resp : response) {
+                /*
                 if (resp.hasError()) {
                     System.out.println("Error in response: "+resp.getError().getMessage()); return;
                 }
+                */
 
                 WebDetection annotation = resp.getWebDetection();
 
                 for (WebDetection.WebLabel label : annotation.getBestGuessLabelsList()) {
-                    System.out.println("Retrieved: "+label.getLabel());
+                    result = label.getLabel();
                 }
             }
 
-
         } catch(IOException ex) { System.out.println("Error initing ImgAnnotateClient: "+ex); }
 
-
-        /*
-        try {
-            ImageAnnotatorClient client = ImageAnnotatorClient.create();
-            List<AnnotateImageResponse> response = client.batchAnnotateImages(requests).getResponsesList();
-
-            for (AnnotateImageResponse resp : response) {
-                if (resp.hasError()) {
-                    System.out.println("Error in response: "+resp.getError().getMessage()); return;
-                }
-
-                WebDetection annotation = resp.getWebDetection();
-
-                for (WebDetection.WebLabel label : annotation.getBestGuessLabelsList()) {
-                    System.out.println("Retrieved: "+label.getLabel());
-                }
-            }
-
-
-        } catch(IOException ex) { System.out.println("Error initing ImgAnnotateClient: "+ex); }
-        */
-
+        assert (result != null): "No suitable label found";
+        return result;
     }
 
     /*

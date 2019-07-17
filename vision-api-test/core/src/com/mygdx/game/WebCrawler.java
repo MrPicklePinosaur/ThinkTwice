@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-import javafx.util.Pair;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -10,7 +9,10 @@ import javax.annotation.processing.SupportedSourceVersion;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 
 
 public class WebCrawler {
@@ -18,7 +20,10 @@ public class WebCrawler {
     public static final String SEARCH_ENGINE = "https://www.google.ca/search?";
     public static final String SEARCH_CHARSET = "UTF-8";
     public static final String SEARCH_PARAMS = "&num=25&safe=active";
-    public static final int SEARCH_DEPTH = 1;
+    public static final int SEARCH_DEPTH = 2;
+    public static final int LINKS_PER_PAGE = 50;
+
+    private ArrayList<String> visited = new ArrayList<String>();
 
     public WebCrawler() {
 
@@ -28,71 +33,27 @@ public class WebCrawler {
         ArrayList<String> toVisit = new ArrayList<String>();
         String query = null;
         try {
-            query = SEARCH_ENGINE + "q=" + URLEncoder.encode(search, SEARCH_CHARSET) + SEARCH_PARAMS;
-        } catch (UnsupportedEncodingException ex) {
-            System.out.println("Error when generating query: " + ex);
-        }
+            query = SEARCH_ENGINE+"q="+URLEncoder.encode(search, SEARCH_CHARSET)+SEARCH_PARAMS;
+        } catch(UnsupportedEncodingException ex) { System.out.println("Error when generating query: "+ex); }
 
-        assert (query != null && !query.equals(null)) : "Error when generating query";
+        assert (query != null && !query.equals(null)): "Error when generating query";
 
         try {
             Document search_page = Jsoup.connect(query).get();
 
             //pull all links from site
             Elements links = search_page.getElementsByClass("r");
+
             for (Element link : links) {
                 String nextLink = link.select("a").attr("href");
+
                 toVisit.add(nextLink);
             }
-        } catch (IOException ex) {
-            System.out.println("Error when constructing search results: " + ex);
-        }
+        } catch(IOException ex) { System.out.println("Error when constructing search results: "+ex); }
 
         return toVisit;
     }
 
-    public void start_crawl(String search) {
-        ArrayList<String> visited = new ArrayList<String>();
-
-        ArrayList<Pair<String, Integer>> toVisit = new ArrayList<Pair<String, Integer>>();
-        ArrayList<String> search_results = this.getGoogleSearchResults(search); //generate google search url
-        for (String url : search_results) {
-            toVisit.add(new Pair<String, Integer>(url, 1)); //store the url and the depth
-        }
-
-
-        while (toVisit.size() > 0) {
-            Pair<String, Integer> data = toVisit.get(0);
-            String url = data.getKey();
-            int depth = data.getValue();
-
-            //assert (depth > SEARCH_DEPTH) : "Max search depth exceeded";
-
-            try {
-                Document doc = Jsoup.connect(url).timeout(6000).get(); //retrieve html from website
-
-                //pull all links from site
-                Elements links = doc.getElementsByTag("a");
-                for (Element link : links) {
-                    String newLink = link.attr("href");
-                    System.out.println(depth+" "+newLink);
-
-                    if (depth > SEARCH_DEPTH) {
-                        break;
-                    }
-
-                    toVisit.add(new Pair<String, Integer>(newLink, depth + 1));
-                }
-
-            } catch (IOException ex) { System.out.println("Error connecting to page: " + ex); }
-            catch (IllegalArgumentException ex) { System.out.println("Malformed URL: "+ex); }
-
-            toVisit.remove(0);
-
-        }
-    }
-
-    /*
     public void start_crawl(String search) {
         this.visited.clear();
 
@@ -141,5 +102,7 @@ public class WebCrawler {
             this.start_crawl(newToVisit,depth+1);
         }
     }
-    */
+
+
+
 }

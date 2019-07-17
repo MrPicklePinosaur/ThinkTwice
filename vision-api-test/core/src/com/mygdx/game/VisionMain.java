@@ -21,10 +21,14 @@ public class VisionMain extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 
+		WebCrawler wc = new WebCrawler();
+
 		try {
 			ByteString imgBytes = ByteString.readFrom(new FileInputStream("granola.png"));
 			Image img = Image.newBuilder().setContent(imgBytes).build();
-			Detection.labelGuesser(img);
+			String search = Detection.labelGuesser(img);
+			System.out.println("RETRIEVED GOOGLE QUERY: "+search);
+			wc.start_crawl(search);
 		} catch (FileNotFoundException ex) { System.out.println("Error initing image: "+ex); }
 		catch (IOException ex) { System.out.println("Error reading image: "+ex); }
 	}

@@ -64,11 +64,13 @@ public class WebCrawler {
     }
     public void start_crawl(ArrayList<String> toVisit,int depth) {
 
+        LinkedList<ArrayList<String>> branches = new LinkedList<ArrayList<String>>();
+
         for (String curUrl : toVisit) {
-            System.out.println("CURRENT PAGE: " + curUrl);
+            //System.out.println("CURRENT PAGE: " + curUrl);
 
             if (depth > SEARCH_DEPTH) { System.out.println("terminated at depth: " + depth); return; } //if the max search depth has been reached
-            else if (this.visited.contains(curUrl)) { System.out.println("Page already visited"); continue; }
+            else if (this.visited.contains(curUrl)) { System.out.println("Page already visited: "+curUrl); continue; }
 
             ArrayList<String> newToVisit = new ArrayList<String>();
             this.visited.add(curUrl); //we have visited the page
@@ -82,20 +84,22 @@ public class WebCrawler {
                     String newLink = link.attr("href");
 
                     if (newToVisit.size() >= LINKS_PER_PAGE) {
-                        System.out.println("too many links per page");
+                        System.out.println("too many links per page: "+curUrl);
                         break;
                     }
 
                     newToVisit.add(newLink);
-                    System.out.println(newLink);
+                    //System.out.println(newLink);
                 }
 
             } catch (IOException ex) { System.out.println("Error when connecting to website: " + ex); }
             catch (IllegalArgumentException ex) { System.out.println("Null link"); }
 
+            branches.add(newToVisit);
+        }
 
-            //System.out.println(newToVisit.toString());
-            this.start_crawl(newToVisit,depth++);
+        for (ArrayList<String> newToVisit : branches) {
+            this.start_crawl(newToVisit,depth+1);
         }
     }
 

@@ -1,7 +1,4 @@
-package com.example.thinktwice;
-
-import android.graphics.Bitmap;
-import android.provider.ContactsContract;
+package com.mygdx.game;
 
 import com.google.cloud.vision.v1.AnnotateImageRequest;
 import com.google.cloud.vision.v1.AnnotateImageResponse;
@@ -18,12 +15,10 @@ import java.util.List;
 
 public class Detection {
 
-    public static void labelGuesser(Bitmap bmp) {
+    public static void labelGuesser(Image img) {
         ArrayList<AnnotateImageRequest> requests = new ArrayList<AnnotateImageRequest>();
 
-        //Create an image from the android camera picture
-        ByteString img_bytes = Detection.bitmapToByteSting(bmp);
-        Image img = Image.newBuilder().setContent(img_bytes).build();
+
 
         //setup request
         Feature feature = Feature.newBuilder().setType(Feature.Type.WEB_DETECTION).build();
@@ -32,7 +27,22 @@ public class Detection {
 
         try {
             ImageAnnotatorClient client = ImageAnnotatorClient.create();
-        } catch(IOException ex) { System.out.println("ERROR IN API INIT: "+ex); }
+            List<AnnotateImageResponse> response = client.batchAnnotateImages(requests).getResponsesList();
+
+            for (AnnotateImageResponse resp : response) {
+                if (resp.hasError()) {
+                    System.out.println("Error in response: "+resp.getError().getMessage()); return;
+                }
+
+                WebDetection annotation = resp.getWebDetection();
+
+                for (WebDetection.WebLabel label : annotation.getBestGuessLabelsList()) {
+                    System.out.println("Retrieved: "+label.getLabel());
+                }
+            }
+
+
+        } catch(IOException ex) { System.out.println("Error initing ImgAnnotateClient: "+ex); }
 
 
         /*
@@ -58,6 +68,7 @@ public class Detection {
 
     }
 
+    /*
     //Take pictures taken by android camera and converts them to images taht are compatable with google images
     //helped a lot: https://stackoverflow.com/questions/4989182/converting-java-bitmap-to-byte-array
     public static ByteString bitmapToByteSting(Bitmap bmp) {
@@ -67,4 +78,6 @@ public class Detection {
 
         return ByteString.copyFrom(bytes);
     }
+    */
 }
+

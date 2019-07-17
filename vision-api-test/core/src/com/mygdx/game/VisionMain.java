@@ -5,8 +5,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.google.cloud.vision.v1.Image;
 import com.google.cloud.vision.v1.ImageAnnotatorClient;
+import com.google.protobuf.ByteString;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class VisionMain extends ApplicationAdapter {
@@ -15,9 +20,13 @@ public class VisionMain extends ApplicationAdapter {
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
+
 		try {
-			ImageAnnotatorClient client = ImageAnnotatorClient.create();
-		} catch(IOException ex) { System.out.println(ex); }
+			ByteString imgBytes = ByteString.readFrom(new FileInputStream("granola.png"));
+			Image img = Image.newBuilder().setContent(imgBytes).build();
+			Detection.labelGuesser(img);
+		} catch (FileNotFoundException ex) { System.out.println("Error initing image: "+ex); }
+		catch (IOException ex) { System.out.println("Error reading image: "+ex); }
 	}
 
 	@Override

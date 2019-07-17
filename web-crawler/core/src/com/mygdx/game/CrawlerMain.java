@@ -13,7 +13,7 @@ public class CrawlerMain extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		WebCrawler wc = new WebCrawler();
-		wc.start_crawl("hello world");
+		wc.start_crawl("java");
 	}
 
 	@Override

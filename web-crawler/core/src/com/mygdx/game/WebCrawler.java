@@ -9,6 +9,7 @@ import javax.annotation.processing.SupportedSourceVersion;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -18,16 +19,16 @@ public class WebCrawler {
 
     public static final String SEARCH_ENGINE = "https://www.google.ca/search?";
     public static final String SEARCH_CHARSET = "UTF-8";
-    public static final String SEARCH_PARAMS = "&num=100";
+    public static final String SEARCH_PARAMS = "&num=25&safe=active";
+    public static final int SEARCH_DEPTH = 2;
 
-    private HashSet<String> visited = new HashSet<String>();
-    private LinkedList<String> toVisit = new LinkedList<String>();
+    private ArrayList<String> visited = new ArrayList<String>();
 
     public WebCrawler() {
 
     }
 
-    public String generateQuery(String search) {
+    public static String generateQuery(String search) {
         String query = null;
         try {
             query = SEARCH_ENGINE+"q="+URLEncoder.encode(search, SEARCH_CHARSET)+SEARCH_PARAMS;
@@ -38,46 +39,50 @@ public class WebCrawler {
     }
 
     public void start_crawl(String search) {
+        //create queue of urls to visit
+        ArrayList<String> toVisit = new ArrayList<String>();
         this.visited.clear();
-        this.toVisit.clear();
 
         //generate google search url
-        String rootUrl = this.generateQuery(search);
+        String rootUrl = WebCrawler.generateQuery(search);
         toVisit.add(rootUrl);
-        System.out.println(rootUrl);
 
-        while (toVisit.size() > 0) {
+        this.start_crawl(toVisit,1);
+    }
+    public void start_crawl(ArrayList<String> toVisit,int depth) {
 
-            String curUrl = toVisit.get(0);
-            //dont visit the site if we have already seen it
-            if (visited.contains(curUrl)) { continue; }
+        for (String curUrl : toVisit) {
+            System.out.println("CURRENT PAGE: "+curUrl);
+            ArrayList<String> newToVisit = new ArrayList<String>();
+
+            if (depth > SEARCH_DEPTH) { System.out.println("terminated at depth: "+depth); return; }
 
             try {
                 Document doc = Jsoup.connect(curUrl).get(); //retrieve html from website
 
-                this.pull_links(doc);
-                /*
+                //pull all links from site
+                Elements links = doc.getElementsByClass("r");
+
                 for (Element link : links) {
+                    String nextLink = link.select("a").attr("href");
+                    System.out.println(nextLink);
+                    //dont visit the site if we have already seen it
+                    //if (visited.contains(curUrl)) { continue; }
+                    newToVisit.add(nextLink);
 
                 }
-                */
-
 
             } catch (IOException ex) { System.out.println("Error when connecting to website: "+ex); }
 
-            toVisit.remove(0); //Possibly reconsider using linkedlist, as remove is O(n)
+            System.out.println(newToVisit.toString());
+            this.start_crawl(newToVisit,depth++);
         }
     }
 
-    public void pull_links(Document doc) {
-        Elements links = doc.getElementsByClass("r");
+    /*
+    public ArrayList<String> getGoogleSearchResults(String search) {
 
-        for (Element link : links) {
-            System.out.println(link.select("a").attr("href"));
-            //System.out.println(link.attr("href"));
-        }
     }
+    */
 
-    public void addUrl(String url) { this.toVisit.add(url); }
-    public void popUrl() { this.visited.add(this.toVisit.pop()); }
 }

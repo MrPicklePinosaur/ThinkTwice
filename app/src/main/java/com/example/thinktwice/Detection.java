@@ -18,7 +18,8 @@ import java.util.List;
 
 public class Detection {
 
-    public static void labelGuesser(Bitmap bmp) {
+    public static String labelGuesser(Bitmap bmp) {
+        String result = null;
         ArrayList<AnnotateImageRequest> requests = new ArrayList<AnnotateImageRequest>();
 
         //Create an image from the android camera picture
@@ -30,31 +31,28 @@ public class Detection {
         AnnotateImageRequest request = AnnotateImageRequest.newBuilder().addFeatures(feature).setImage(img).build();
         requests.add(request);
 
-        try {
-            ImageAnnotatorClient client = ImageAnnotatorClient.create();
-        } catch(IOException ex) { System.out.println("ERROR IN API INIT: "+ex); }
 
-
-        /*
         try {
             ImageAnnotatorClient client = ImageAnnotatorClient.create();
             List<AnnotateImageResponse> response = client.batchAnnotateImages(requests).getResponsesList();
 
             for (AnnotateImageResponse resp : response) {
+                /*
                 if (resp.hasError()) {
                     System.out.println("Error in response: "+resp.getError().getMessage()); return;
-                }
+                } */
 
                 WebDetection annotation = resp.getWebDetection();
 
                 for (WebDetection.WebLabel label : annotation.getBestGuessLabelsList()) {
-                    System.out.println("Retrieved: "+label.getLabel());
+                    result = label.getLabel();
                 }
             }
-
-
+               
         } catch(IOException ex) { System.out.println("Error initing ImgAnnotateClient: "+ex); }
-        */
+
+        assert (result != null): "No result found";
+        return result;
 
     }
 

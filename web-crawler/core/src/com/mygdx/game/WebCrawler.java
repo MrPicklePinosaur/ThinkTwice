@@ -18,6 +18,7 @@ public class WebCrawler {
     public static final String SEARCH_ENGINE = "https://www.google.ca/search?";
     public static final String SEARCH_CHARSET = "UTF-8";
     public static final String SEARCH_PARAMS = "&num=25&safe=active";
+    public static final String DESCRIPTION = "";
     public static final int SEARCH_DEPTH = 1;
 
     public WebCrawler() {
@@ -60,7 +61,6 @@ public class WebCrawler {
             toVisit.add(new Pair<String, Integer>(url, 1)); //store the url and the depth
         }
 
-
         while (toVisit.size() > 0) {
             Pair<String, Integer> data = toVisit.get(0);
             String url = data.getKey();
@@ -77,7 +77,7 @@ public class WebCrawler {
                     String newLink = link.attr("href");
                     System.out.println(depth+" "+newLink);
 
-                    if (depth > SEARCH_DEPTH) {
+                    if (depth > SEARCH_DEPTH || visited.contains(newLink)) {
                         break;
                     }
 
@@ -87,8 +87,7 @@ public class WebCrawler {
             } catch (IOException ex) { System.out.println("Error connecting to page: " + ex); }
             catch (IllegalArgumentException ex) { System.out.println("Malformed URL: "+ex); }
 
-            toVisit.remove(0);
-
+            visited.add(toVisit.remove(0).getKey());
         }
     }
 

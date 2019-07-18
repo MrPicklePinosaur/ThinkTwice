@@ -57,15 +57,9 @@ class FragmentCamera extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode,resultCode,data);
         Bitmap bmp = (Bitmap) data.getExtras().get("data");
         snapshot.setImageBitmap(bmp);
-        Detection.labelGuesser(bmp);
+        String result = Detection.labelGuesser(bmp);
+        System.out.println(result);
 
-        /* Possibly delete, as we actually still need the bitmap later
-        //attempt to dispose the bitmap
-        if (bmp != null && bmp.isRecycled() == false) {
-            bmp.recycle();
-            bmp = null;
-        }
-        */
     }
 }
 

@@ -48,7 +48,7 @@ public class Detection {
                     result = label.getLabel();
                 }
             }
-               
+
         } catch(IOException ex) { System.out.println("Error initing ImgAnnotateClient: "+ex); }
 
         assert (result != null): "No result found";

@@ -14,6 +14,9 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 
 class FragmentHome extends Fragment {
 
@@ -57,10 +60,38 @@ class FragmentCamera extends Fragment implements View.OnClickListener {
         super.onActivityResult(requestCode,resultCode,data);
         Bitmap bmp = (Bitmap) data.getExtras().get("data");
         snapshot.setImageBitmap(bmp);
+
+        /* ML stuff not needed for MVP
         String result = Detection.labelGuesser(bmp);
-        System.out.println(result);
+        System.out.println(result); */
+
+        //Once we get the result, a panel slides up and shows info about the item
+        //show_item_info();
 
     }
+
+    public void show_item_info() { //slides a new fragment in that shows the details of the item scanned
+        //this block of code is from https://codinginflow.com/tutorials/android/fragment-animation-interface
+        FragmentCameraScanned scanned_fragment = new FragmentCameraScanned();
+        FragmentTransaction trans = Global.manager.beginTransaction();
+        trans.setCustomAnimations(R.anim.slide_in_fragment,R.anim.slide_out_fragment,R.anim.slide_in_fragment,R.anim.slide_out_fragment);
+
+        trans.addToBackStack(null);
+        trans.add(R.id.fragment_scanner_container,scanned_fragment,"SCANNED_FRAGMENT").commit();
+
+    }
+
+}
+
+class FragmentCameraScanned extends Fragment {
+
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceStats) {
+
+        View view = inflater.inflate(R.layout.fragment_camera_scanner,null);
+
+        return view;
+    }
+
 }
 
 class FragmentCommunity extends Fragment implements View.OnClickListener {

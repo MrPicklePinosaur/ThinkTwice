@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:text="Web Scrape!"
         android:layout_centerInParent="true"
-        android:background="@drawable/gradient" />
+        android:background="@drawable/gradient"
+        android:visibility="gone" />
 
 </RelativeLayout>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Code from: https://codinginflow.com/tutorials/android/fragment-animation-interface -->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shareInterpolator="false">
+    <translate
+        android:fromYDelta="100%" android:toYDelta="25%"
+        android:duration="800" />
+</set>
